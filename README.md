@@ -9,3 +9,5 @@
 Repository needs tickets to describe the tasks being worked on and completed in order for the TA to grade.
 
 By Friday, November 14th, 70-80% of the backend should be done.
+
+Repository is public so keep that it mind and keep secrets secret.
