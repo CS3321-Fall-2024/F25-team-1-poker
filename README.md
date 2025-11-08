@@ -1,6 +1,8 @@
 # F25-team-1-poker
  A poker game using Quart for the backend
+ 
  our API/backend: used to facilitate multiplayer lobbies
+ 
  utilized third-party app/API:  https://deckofcardsapi.com/
  
 
