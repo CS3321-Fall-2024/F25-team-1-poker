@@ -16,7 +16,7 @@ async def create_lobby():
         async with session.get(f"{DECK_API_BASE}/new/shuffle/?deck_count=1") as resp:
             deck_data = await resp.json()
 
-    lobby_code = secrets.token_hex(3)  # short readable code
+    lobby_code = secrets.token_hex(3)  # short readable code made of 6 hexadecimal characters. collisions possible as it's randomly generated
     lobbies[lobby_code] = {
         "deck_id": deck_data["deck_id"],
         "players": [],
