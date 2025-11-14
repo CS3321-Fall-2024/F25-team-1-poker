@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Poker API Tester</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			padding: 20px;
+			max-width: 600px;
+			margin: auto;
+		}
+		input, button {
+			padding: 8px;
+			margin-top: 5px;
+			width: 100%;
+		}
+		pre {
+			background: #f1f1f1;
+			padding: 10px;
+			border-radius: 4px;
+			white-space: pre-wrap;
+		}
+		.block {
+			margin-bottom: 20px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>Poker API Tester</h1>
+
+	<div class="block">
+		<h3>Create Lobby</h3>
+		<button onclick="createLobby()">Create Lobby</button>
+	</div>
+
+	<div class="block">
+		<h3>Join Lobby</h3>
+		<input id="joinLobbyCode" placeholder="Lobby Code" />
+		<input id="playerName" placeholder="Player Name" />
+		<button onclick="joinLobby()">Join Lobby</button>
+	</div>
+
+	<div class="block">
+		<h3>Draw Card (from Deck of Cards API)</h3>
+		<input id="deckId" placeholder="Deck ID (optional)" />
+		<button onclick="drawCard()">Draw</button>
+	</div>
+
+	<h3>API Response</h3>
+	<pre id="output">Waiting…</pre>
+
+	<script>
+		const backend = window.location.origin; 
+		// ^ Works automatically both locally and on Render
+
+		function log(data) {
+			document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+		}
+
+		async function createLobby() {
+			const response = await fetch(`${backend}/create_lobby`, {
+				method: "POST",
+			});
+			log(await response.json());
+		}
+
+		async function joinLobby() {
+			const lobby = document.getElementById("joinLobbyCode").value.trim();
+			const name = document.getElementById("playerName").value.trim();
+
+			const response = await fetch(`${backend}/join_lobby`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					lobby_code: lobby,
+					player_name: name,
+				}),
+			});
+
+			log(await response.json());
+		}
+
+		async function drawCard() {
+			const deckId = document.getElementById("deckId").value.trim();
+			let url;
+
+			if (deckId === "") {
+				url = "https://deckofcardsapi.com/api/deck/new/draw/?count=1";
+			} else {
+				url = `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`;
+			}
+
+			const response = await fetch(url);
+			log(await response.json());
+		}
+	</script>
+
+</body>
+</html>

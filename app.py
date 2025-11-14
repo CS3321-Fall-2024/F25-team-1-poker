@@ -1,6 +1,7 @@
 from quart import Quart, request, jsonify
 import aiohttp
 import secrets
+from quart import send_file
 
 app = Quart(__name__)
 
@@ -8,6 +9,9 @@ lobbies = {}  # in-memory store | ERASED when server stops
 
 DECK_API_BASE = "https://deckofcardsapi.com/api/deck"
 
+@app.route("/")
+async def index():
+	return await send_file("index.html")
 
 @app.post("/create_lobby")
 async def create_lobby():
