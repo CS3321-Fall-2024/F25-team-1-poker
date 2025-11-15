@@ -9,9 +9,14 @@
 
 Repository needs tickets to describe the tasks being worked on and completed in order for the TA to grade.
 
-By Friday, November 14th, 70-80% of the backend should be done.
-
 Repository is public so keep that it mind and keep secrets secret.
+
+This week, we'd like to accomplish:
+1. flesh out front-end to make actual poker game with turns/declare a winner
+2. make necessary additions to API/backend to facilitate #1
+3. divvy up work so everyone can contribute. perhaps assign issues to specific people
+4. make an issue for creating frontend tool that tests API (already resolved by commit 518df13)
+5. fix join lobby post function saying the player's name is "none" (is it listing all players as "none" internally or just telling the player that in the return?)
 
 ------------------------------------------
 
