@@ -25,7 +25,11 @@ async def create_lobby():
         "deck_id": deck_data["deck_id"],
         "players": [],
         "hands": {},
-        "started": False
+        "started": False,
+        #new
+        "state": "preflop",
+        "community_cards": [],
+        "current_player_index": 0
     }
 
     return jsonify({"lobby_code": lobby_code})
@@ -95,6 +99,43 @@ async def draw_card():
     lobby["hands"][player].extend(card_data["cards"])
 
     return jsonify({"card_drawn": card_data["cards"][0]})
+
+@app.post("/next_phase")
+async def next_phase():
+    data = await request.json
+    lobby_code = data.get("lobby_code")
+    lobby = lobbies.get(lobby_code)
+
+    state = lobby["state"]
+
+    async with aiohttp.ClientSession() as session:
+
+        # FLOP
+        if state == "preflop":
+            async with session.get(f"{DECK_API_BASE}/{lobby['deck_id']}/draw/?count=3") as resp:
+                data = await resp.json()
+            lobby["community_cards"].extend(data["cards"])
+            lobby["state"] = "flop"
+        
+        # TURN
+        elif state == "flop":
+            async with session.get(f"{DECK_API_BASE}/{lobby['deck_id']}/draw/?count=1") as resp:
+                data = await resp.json()
+            lobby["community_cards"].extend(data["cards"])
+            lobby["state"] = "turn"
+
+        # RIVER
+        elif state == "turn":
+            async with session.get(f"{DECK_API_BASE}/{lobby['deck_id']}/draw/?count=1") as resp:
+                data = await resp.json()
+            lobby["community_cards"].extend(data["cards"])
+            lobby["state"] = "river"
+
+        # SHOWDOWN
+        elif state == "river":
+            lobby["state"] = "showdown"
+
+    return jsonify({"state": lobby["state"], "community_cards": lobby["community_cards"]})
 
 
 if __name__ == "__main__":
