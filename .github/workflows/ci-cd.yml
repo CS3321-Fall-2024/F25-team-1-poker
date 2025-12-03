@@ -30,7 +30,7 @@ jobs:
         run: |
           python -m pytest tests/ --cov=. --cov-report=term-missing --cov-report=xml || echo "Coverage report generation"
       - name: Upload coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
@@ -77,14 +77,14 @@ jobs:
     needs: build
     steps:
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v3
+        uses: dopplerhq/cli-action@v4
       - name: Fetch secrets from Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_AWS_SECRETS }}
         run: |
           echo "Fetching deployment secrets from Doppler..."
-          export AWS_HOST=$(doppler secrets get AWS_EC2_HOST --plain --token=$DOPPLER_TOKEN)
-          export AWS_USER=$(doppler secrets get AWS_EC2_USER --plain --token=$DOPPLER_TOKEN)
+          export AWS_HOST=$(doppler secrets get AWS_EC2_HOST --plain --token=$DOPPLER_AWS_SECRETS)
+          export AWS_USER=$(doppler secrets get AWS_EC2_USER --plain --token=$DOPPLER_AWS_SECRETS)
           echo "AWS_HOST=$AWS_HOST" >> $GITHUB_ENV
           echo "AWS_USER=$AWS_USER" >> $GITHUB_ENV
           echo "Secrets retrieved successfully"
@@ -158,7 +158,7 @@ jobs:
           echo "Deployment Status: SUCCESS ✅" > deployment-status.txt
           echo "Last Deployed: $(date)" >> deployment-status.txt
       - name: Upload deployment artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-report
           path: deployment-status.txt
