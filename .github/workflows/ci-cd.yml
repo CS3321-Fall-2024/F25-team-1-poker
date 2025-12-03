@@ -148,9 +148,9 @@ jobs:
           echo "   Author: ${{ github.actor }}"
           echo ""
           echo "Deployment Details:"
-          echo "  🐳 Docker Image: prameshshah1/poker-game-backend:latest"
-          echo "  🌐 Live URL: http://54.193.179.137"
-          echo "  ⏰ Time: $(date)"
+          echo "   Docker Image: prameshshah1/poker-game-backend:latest"
+          echo "   Live URL: http://54.193.179.137"
+          echo "   Time: $(date)"
           echo ""
           echo "================================================"
       - name: Create deployment badge
