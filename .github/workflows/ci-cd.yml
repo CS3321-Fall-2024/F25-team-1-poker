@@ -119,10 +119,10 @@ jobs:
           echo "========================================="
       - name: Deployment Summary
         run: |
-          echo "✅ Deployment stage completed successfully"
-          echo "📦 Docker image: prameshshah1/poker-game-backend:latest"
-          echo "🌐 Target server: ${{ env.AWS_HOST }}"
-          echo "🔐 Secrets managed by: Doppler"
+          echo " Deployment stage completed successfully"
+          echo " Docker image: prameshshah1/poker-game-backend:latest"
+          echo " Target server: ${{ env.AWS_HOST }}"
+          echo " Secrets managed by: Doppler"
 
   notify:
     name: Send Deployment Notification
@@ -133,19 +133,19 @@ jobs:
       - name: Generate deployment report
         run: |
           echo "================================================"
-          echo "🎉 DEPLOYMENT SUCCESSFUL 🎉"
+          echo " DEPLOYMENT SUCCESSFUL "
           echo "================================================"
           echo ""
           echo "Pipeline Summary:"
-          echo "  ✅ Test Stage: PASSED"
-          echo "  ✅ Build Stage: PASSED"
-          echo "  ✅ Deploy Stage: PASSED"
+          echo "   Test Stage: PASSED"
+          echo "   Build Stage: PASSED"
+          echo "   Deploy Stage: PASSED"
           echo ""
           echo "Build Information:"
-          echo "  📦 Repository: ${{ github.repository }}"
-          echo "  🌿 Branch: ${{ github.ref_name }}"
-          echo "  📝 Commit: ${{ github.sha }}"
-          echo "  👤 Author: ${{ github.actor }}"
+          echo "   Repository: ${{ github.repository }}"
+          echo "   Branch: ${{ github.ref_name }}"
+          echo "   Commit: ${{ github.sha }}"
+          echo "   Author: ${{ github.actor }}"
           echo ""
           echo "Deployment Details:"
           echo "  🐳 Docker Image: prameshshah1/poker-game-backend:latest"
@@ -155,7 +155,7 @@ jobs:
           echo "================================================"
       - name: Create deployment badge
         run: |
-          echo "Deployment Status: SUCCESS ✅" > deployment-status.txt
+          echo "Deployment Status: SUCCESS " > deployment-status.txt
           echo "Last Deployed: $(date)" >> deployment-status.txt
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
