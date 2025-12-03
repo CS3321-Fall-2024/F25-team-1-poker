@@ -77,7 +77,7 @@ jobs:
     needs: build
     steps:
       - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v4
+        uses: dopplerhq/cli-action@v3
       - name: Fetch secrets from Doppler
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_AWS_SECRETS }}
