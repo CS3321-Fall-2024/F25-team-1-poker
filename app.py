@@ -39,7 +39,7 @@ async def create_lobby():
 async def join_lobby():
     data = await request.json
     lobby_code = data.get("lobby_code")
-    player = data.get("player")
+    player = data.get("player_name")
 
     if lobby_code not in lobbies:
         return jsonify({"error": "Lobby not found"}), 404
