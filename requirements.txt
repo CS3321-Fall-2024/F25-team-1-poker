@@ -1,3 +1,6 @@
 quart
 aiohttp
 hypercorn
+pytest
+pytest-asyncio
+pytest-cov
