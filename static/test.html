@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Poker Test UI</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			max-width: 900px;
+			margin: auto;
+			padding: 20px;
+		}
+		h2 {
+			margin-top: 40px;
+		}
+		section {
+			padding: 15px;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			margin-bottom: 20px;
+		}
+		.cards {
+			display: flex;
+			gap: 10px;
+			margin-top: 10px;
+		}
+		.cards img {
+			width: 80px;
+			border-radius: 6px;
+			border: 1px solid #aaa;
+		}
+		input, button {
+			padding: 6px;
+			margin: 4px 0;
+		}
+	</style>
+</head>
+<body>
+
+	<h1>Poker API Test Panel</h1>
+
+	<!-- Create Lobby -->
+	<section>
+		<h2>Create Lobby</h2>
+		<button onclick="createLobby()">Create Lobby</button>
+		<p id="createLobbyResult"></p>
+	</section>
+
+	<!-- Join Lobby -->
+	<section>
+		<h2>Join Lobby</h2>
+		<input id="joinLobbyCode" placeholder="Lobby Code">
+		<input id="joinPlayerName" placeholder="Player Name">
+		<button onclick="joinLobby()">Join</button>
+		<p id="joinLobbyResult"></p>
+	</section>
+
+	<!-- Start Game -->
+	<section>
+		<h2>Start Game</h2>
+		<input id="startLobbyCode" placeholder="Lobby Code">
+		<button onclick="startGame()">Start</button>
+		<p id="startGameResult"></p>
+	</section>
+
+	<!-- Get Hand -->
+	<section>
+		<h2>View Player Hand</h2>
+		<input id="handPlayerName" placeholder="Player Name">
+		<button onclick="getHand()">Get Hand</button>
+
+		<div id="handCards" class="cards"></div>
+	</section>
+
+	<!-- Draw Card -->
+	<section>
+		<h2>Draw Card</h2>
+		<input id="drawLobbyCode" placeholder="Lobby Code">
+		<input id="drawPlayerName" placeholder="Player Name">
+		<button onclick="drawCard()">Draw</button>
+		<div id="drawResult" class="cards"></div>
+	</section>
+
+	<!-- Next Phase -->
+	<section>
+		<h2>Next Phase (Flop/Turn/River/Showdown)</h2>
+		<input id="phaseLobbyCode" placeholder="Lobby Code">
+		<button onclick="nextPhase()">Next Phase</button>
+
+		<p id="phaseState"></p>
+		<h3>Community Cards</h3>
+		<div id="communityCards" class="cards"></div>
+	</section>
+
+	<script>
+		async function createLobby() {
+			let res = await fetch("/create_lobby", {
+				method: "POST"
+			});
+			let data = await res.json();
+			document.getElementById("createLobbyResult").innerText =
+				"Lobby Code: " + data.lobby_code;
+		}
+
+		async function joinLobby() {
+			let lobby_code = document.getElementById("joinLobbyCode").value;
+			let player_name = document.getElementById("joinPlayerName").value;
+
+			let res = await fetch("/join_lobby", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ lobby_code, player_name })
+			});
+			let data = await res.json();
+			document.getElementById("joinLobbyResult").innerText =
+				JSON.stringify(data);
+		}
+
+		async function startGame() {
+			let lobby_code = document.getElementById("startLobbyCode").value;
+
+			let res = await fetch("/start_game", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ lobby_code })
+			});
+			let data = await res.json();
+
+			document.getElementById("startGameResult").innerText =
+				JSON.stringify(data);
+		}
+
+		async function getHand() {
+			let player = document.getElementById("handPlayerName").value;
+
+			let res = await fetch("/get_hand/" + player);
+			let data = await res.json();
+
+			let container = document.getElementById("handCards");
+			container.innerHTML = "";
+
+			if (Array.isArray(data)) {
+				for (let c of data)
+					container.innerHTML += `<img src="${c.image}">`;
+			}
+		}
+
+		async function drawCard() {
+			let lobby_code = document.getElementById("drawLobbyCode").value;
+			let player = document.getElementById("drawPlayerName").value;
+
+			let res = await fetch("/draw_card", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ lobby_code, player })
+			});
+			let data = await res.json();
+
+			let container = document.getElementById("drawResult");
+			container.innerHTML = "";
+
+			if (data.card_drawn)
+				container.innerHTML = `<img src="${data.card_drawn.image}">`;
+		}
+
+		async function nextPhase() {
+			let lobby_code = document.getElementById("phaseLobbyCode").value;
+
+			let res = await fetch("/next_phase", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ lobby_code })
+			});
+			let data = await res.json();
+
+			document.getElementById("phaseState").innerText =
+				"Phase: " + data.state;
+
+			let container = document.getElementById("communityCards");
+			container.innerHTML = "";
+
+			if (Array.isArray(data.community_cards)) {
+				for (let c of data.community_cards)
+					container.innerHTML += `<img src="${c.image}">`;
+			}
+		}
+	</script>
+
+</body>
+</html>
